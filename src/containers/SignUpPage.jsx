@@ -51,7 +51,7 @@ class SignUpPage extends React.Component {
     event.preventDefault();
 
     // send signup form data to server to be validated.
-    fetch(`/auth/signup`, {
+    fetch(`https://liars-dice-server.herokuapp.com/auth/signup`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

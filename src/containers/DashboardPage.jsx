@@ -21,7 +21,7 @@ class DashboardPage extends React.Component {
    */
   componentDidMount() {
     console.log(Auth.getToken());
-    fetch(`/api/dashboard`, {
+    fetch(`https://liars-dice-server.herokuapp.com/api/dashboard`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization':`bearer ${Auth.getToken()}`,
