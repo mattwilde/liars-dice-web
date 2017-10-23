@@ -37,7 +37,7 @@ ReactDOM.render((
     {/* <Route exact path='/' component={HomePage} /> */}
     <Route exact path='/' component={(location, callback) => {
         if (Auth.isUserAuthenticated()) {
-          return <DashboardPage serverUrl={env['LIARS_DICE_SERVER_URL']}/>;
+          return <DashboardPage />;
         } else {
           return <HomePage />;
         }
