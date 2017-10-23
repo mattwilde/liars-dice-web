@@ -45,7 +45,7 @@ class LoginPage extends React.Component {
     event.preventDefault();
 
     // send signup form data to server to be validated.
-    fetch('/auth/login', {
+    fetch(`/auth/login`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

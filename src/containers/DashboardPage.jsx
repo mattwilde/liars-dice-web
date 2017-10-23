@@ -20,7 +20,8 @@ class DashboardPage extends React.Component {
    * This method will be executed after initial rendering.
    */
   componentDidMount() {
-    fetch('/api/dashboard', {
+    console.log(Auth.getToken());
+    fetch(`/api/dashboard`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization':`bearer ${Auth.getToken()}`,

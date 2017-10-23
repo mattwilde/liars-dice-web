@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
@@ -24,20 +26,7 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 // import AppBar from 'material-ui/AppBar';
 
 import Auth from './modules/Auth';
-
 darkBaseTheme.fontFamily = 'Lato, sans-serif';
-console.log(darkBaseTheme);
-// const App = () => (
-//   <div>App
-//     <Link to='/about' >About</Link>
-//   </div>
-// )
-
-// const About = () => (
-//   <div>About
-//     <Link to='/' >App</Link>
-//   </div>
-// )
 
 ReactDOM.render((
   // <Router routes={routes} />
@@ -48,7 +37,7 @@ ReactDOM.render((
     {/* <Route exact path='/' component={HomePage} /> */}
     <Route exact path='/' component={(location, callback) => {
         if (Auth.isUserAuthenticated()) {
-          return <DashboardPage />;
+          return <DashboardPage serverUrl={env['LIARS_DICE_SERVER_URL']}/>;
         } else {
           return <HomePage />;
         }
@@ -63,12 +52,4 @@ ReactDOM.render((
   document.getElementById('root')
 );
 
-
-// ReactDOM.render(<App />, document.getElementById('root'));
 registerServiceWorker();
-
-// <BrowserRouter>
-// <div>
-//   <Route path='/' component={App} />
-// </div>
-// </BrowserRouter>

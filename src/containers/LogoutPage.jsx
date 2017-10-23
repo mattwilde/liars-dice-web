@@ -9,7 +9,7 @@ class LogoutPage extends React.Component {
    */
   constructor(props, context) {
     super(props, context);
-console.log('hello');
+    
     this.state = {};
   }
 
