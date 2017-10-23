@@ -14,10 +14,7 @@ import SignUpPage from './containers/SignUpPage';
 import LoginPage from './containers/LoginPage';
 import LogoutPage from './containers/LogoutPage';
 
-// import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
-// import routes from './server/routes.js';
-
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -29,12 +26,9 @@ import Auth from './modules/Auth';
 darkBaseTheme.fontFamily = 'Lato, sans-serif';
 
 ReactDOM.render((
-  // <Router routes={routes} />
 <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
   <BrowserRouter>
   <div>
-  {/* <AppBar title="My AppBar" /> */}
-    {/* <Route exact path='/' component={HomePage} /> */}
     <Route exact path='/' component={(location, callback) => {
         if (Auth.isUserAuthenticated()) {
           return <DashboardPage />;
