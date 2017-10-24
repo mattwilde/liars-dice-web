@@ -1,12 +1,9 @@
 class Config {
   static getDbUrl() {
-    console.log(process.env);
-    if (process.env['NODE_ENV'] !== 'development') {
-      console.log('prod');
+    if (process.env['NODE_ENV'] !== 'development') { // prod
       return 'https://liars-dice-server.herokuapp.com';
     }
-    else {
-      console.log('dev');      
+    else { // dev
       return 'http://localhost:3001'
     }
   }

@@ -8,8 +8,8 @@ import './style.css';
 // import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-import DashboardPage from './containers/DashboardPage';
-import HomePage from './components/HomePage';
+import HomePage from './containers/HomePage';
+import LandingPage from './components/LandingPage';
 import SignUpPage from './containers/SignUpPage';
 import LoginPage from './containers/LoginPage';
 import LogoutPage from './containers/LogoutPage';
@@ -31,9 +31,9 @@ ReactDOM.render((
   <div>
     <Route exact path='/' component={(location, callback) => {
         if (Auth.isUserAuthenticated()) {
-          return <DashboardPage />;
-        } else {
           return <HomePage />;
+        } else {
+          return <LandingPage />;
         }
       }} />
     <Route path='/signup' component={SignUpPage} />

@@ -5,8 +5,9 @@ class Auth {
    *
    * @param {string} token
    */
-  static authenticateUser(token) {
+  static authenticateUser(token, user) {
     localStorage.setItem('token', token);
+    localStorage.setItem('user', user);
   }
 
   /**
@@ -36,6 +37,9 @@ class Auth {
     return localStorage.getItem('token');
   }
 
+  static getUser() {
+    return localStorage.getItem('user');
+  }
 }
 
 export default Auth;

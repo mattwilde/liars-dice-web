@@ -7,7 +7,7 @@ const PublicHeader = () => (
     <div className="top-bar">
 
       <div className="top-bar-left">
-        <NavLink to="/">Liars Dice Online</NavLink>
+        <NavLink to="/">Liars Dice X</NavLink>
       </div>
 
 
