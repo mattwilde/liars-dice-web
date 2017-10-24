@@ -2,6 +2,7 @@ import React from 'react';
 import SignUpForm from '../components/SignUpForm.jsx';
 import PublicHeader from '../components/PublicHeader';
 import { Redirect } from 'react-router';
+import Config from '../modules/Config';
 
 class SignUpPage extends React.Component {
 
@@ -51,7 +52,7 @@ class SignUpPage extends React.Component {
     event.preventDefault();
 
     // send signup form data to server to be validated.
-    fetch(`https://liars-dice-server.herokuapp.com/auth/signup`, {
+    fetch(`${Config.getDbUrl()}/auth/signup`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

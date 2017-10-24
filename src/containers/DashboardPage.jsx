@@ -2,6 +2,7 @@ import React from 'react';
 import Auth from '../modules/Auth';
 import Dashboard from '../components/Dashboard.jsx';
 import PublicHeader from '../components/PublicHeader';
+import Config from '../modules/Config';
 
 class DashboardPage extends React.Component {
 
@@ -21,7 +22,7 @@ class DashboardPage extends React.Component {
    */
   componentDidMount() {
     console.log(Auth.getToken());
-    fetch(`https://liars-dice-server.herokuapp.com/api/dashboard`, {
+    fetch(`${Config.getDbUrl()}/api/dashboard`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization':`bearer ${Auth.getToken()}`,
