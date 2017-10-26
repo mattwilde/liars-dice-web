@@ -19,9 +19,14 @@ const Home = ({ user, state, handlers }) => (
             <CardTitle
               title={`Welcome ${user}!`}
             />
-            <CardText>TODO: Updates, cool stuff, etc...
-
-              
+            <CardText>
+              {
+                state.matchmakingStatus ? state.matchmakingStatus.split('\n').map(function(line) {
+                  return (
+                    <span>{line}<br /></span>
+                  )}
+                ) : 'Hello, I have Johns.'
+              }
             </CardText>
             {/* {secretData && <CardText style={{ fontSize: '16px', color: 'green' }}>{secretData}</CardText>} */}
           </Card>
@@ -52,7 +57,10 @@ const Home = ({ user, state, handlers }) => (
               </SelectField>
             </CardText>
             <CardActions>
-              <RaisedButton label="Find Match" primary={true} style={styles.raisedButton} />
+              <RaisedButton label="Find Match" 
+                onClick={handlers.handleClickFindMatch}
+                primary={true} 
+                style={styles.raisedButton} />
             </CardActions>
           </Card>
         </td>

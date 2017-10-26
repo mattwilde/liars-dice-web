@@ -16,6 +16,7 @@ class HomePage extends React.Component {
       user: Auth.getUser(),
       modeValue: 'casual',
       serverValue: 'public',
+      matchmakingStatus: 'Idle',
     };
   }
 
@@ -48,6 +49,7 @@ class HomePage extends React.Component {
   handlers = {
     handleModeChange: (event, index, modeValue) => this.setState({modeValue}),
     handleServerChange: (event, index, serverValue) => this.setState({serverValue}),
+    handleClickFindMatch: () => { this.setState({matchmakingStatus: `Looking for match... \n(mode: ${this.state.modeValue}, server: ${this.state.serverValue})`})},
   };
   
   /**
