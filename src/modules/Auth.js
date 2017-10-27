@@ -7,7 +7,7 @@ class Auth {
    */
   static authenticateUser(token, user) {
     localStorage.setItem('token', token);
-    localStorage.setItem('user', user);
+    localStorage.setItem('user', JSON.stringify(user)); // convert to string to store
   }
 
   /**
@@ -38,7 +38,7 @@ class Auth {
   }
 
   static getUser() {
-    return localStorage.getItem('user');
+    return JSON.parse(localStorage.getItem('user'));
   }
 }
 

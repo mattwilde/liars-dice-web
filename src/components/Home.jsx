@@ -21,11 +21,11 @@ const Home = ({ user, state, handlers }) => (
             />
             <CardText>
               {
-                state.matchmakingStatus ? state.matchmakingStatus.split('\n').map(function(line) {
+                state.isFindingMatch ? state.lookingForMatchString.split('\n').map(function(line) {
                   return (
                     <span>{line}<br /></span>
                   )}
-                ) : 'Hello, I have Johns.'
+                ) : 'Bro, play some Liars Dice, breh.'
               }
             </CardText>
             {/* {secretData && <CardText style={{ fontSize: '16px', color: 'green' }}>{secretData}</CardText>} */}
@@ -57,8 +57,8 @@ const Home = ({ user, state, handlers }) => (
               </SelectField>
             </CardText>
             <CardActions>
-              <RaisedButton label="Find Match" 
-                onClick={handlers.handleClickFindMatch}
+              <RaisedButton label={state.isFindingMatch ? 'Cancel' : 'Find Match'} 
+                onClick={state.isFindingMatch ?handlers.handleClickCancelMatch : handlers.handleClickFindMatch}
                 primary={true} 
                 style={styles.raisedButton} />
             </CardActions>

@@ -66,7 +66,7 @@ class LoginPage extends React.Component {
             });
 
             // save the token
-            Auth.authenticateUser(body.token, body.user.name);
+            Auth.authenticateUser(body.token, body.user);
           
             // change the current URL to /
             this.setState({ redirect: '/' });
