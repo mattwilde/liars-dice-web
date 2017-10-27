@@ -13,6 +13,7 @@ import LandingPage from './components/LandingPage';
 import SignUpPage from './containers/SignUpPage';
 import LoginPage from './containers/LoginPage';
 import LogoutPage from './containers/LogoutPage';
+import GamePage from './containers/GamePage';
 
 import { BrowserRouter, Route } from 'react-router-dom';
 
@@ -39,6 +40,7 @@ ReactDOM.render((
     <Route path='/signup' component={SignUpPage} />
     <Route path='/login' component={LoginPage} />
     <Route path='/logout' component={LogoutPage} />
+    <Route path='/match' component ={GamePage} />
   </div>
   </BrowserRouter>
   </MuiThemeProvider>
