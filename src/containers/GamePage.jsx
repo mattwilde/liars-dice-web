@@ -1,6 +1,6 @@
 import React from 'react';
 import Auth from '../modules/Auth';
-import BoardImage from '../components/BoardImage.jsx';
+import BoardImage from '../components/GameBoard/BoardImage.jsx';
 import PublicHeader from '../components/PublicHeader';
 
 class GamePage extends React.Component {
@@ -16,7 +16,7 @@ class GamePage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         <PublicHeader />
         <BoardImage />
       </div>
