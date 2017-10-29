@@ -13,7 +13,7 @@ class GamePage extends React.Component {
       modeValue: null,
       serverValue: null,
       socket: null,
-      users: Array(6).fill(null),
+      users: [],
     };
   }
   compenentWillMount() {
@@ -47,9 +47,21 @@ class GamePage extends React.Component {
   }
 
   render() {
+    const users = this.state.users
+    if(typeof users !== 'undefined') {
+      var playerGUIS = users.map(function(user){
+        //return <li><PlayerGUI user={user}/></li>
+        return <li>{user}</li>
+      });
+    } else {
+      var playerGUIS = 'Waiting for players to join match...'
+    }
+
     return (
       <div>
-        <p>No johns</p>
+        <ul>
+          {playerGUIS}
+        </ul>
       </div>
     )
     //  <div className="container">
