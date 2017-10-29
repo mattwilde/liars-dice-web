@@ -50,7 +50,7 @@ class GamePage extends React.Component {
     const users = this.state.users
     if(typeof users !== 'undefined') {
       var playerGUIS = users.map(function(user){
-        //return <li><PlayerGUI user={user}/></li>
+        //return <PlayerGUI user={user}/>
         return <li>{user}</li>
       });
     } else {
@@ -64,12 +64,6 @@ class GamePage extends React.Component {
         </ul>
       </div>
     )
-    //  <div className="container">
-    //    <PlayerGUI />
-    //    <PublicHeader />
-    //    <BoardImage />
-    //  </div>
-    //)
   }
 }
 
