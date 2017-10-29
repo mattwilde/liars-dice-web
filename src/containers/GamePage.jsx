@@ -8,7 +8,7 @@ class GamePage extends React.Component {
     super(props);
 
     this.state = {
-      matchid: null,
+      matchid: this.props.matchid,
       modeValue: null,
       serverValue: null,
     };
@@ -17,6 +17,7 @@ class GamePage extends React.Component {
   render() {
     return (
       <div className="container">
+        <PlayerGUI />
         <PublicHeader />
         <BoardImage />
       </div>
