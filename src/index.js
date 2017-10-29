@@ -41,7 +41,7 @@ ReactDOM.render((
     <Route path='/signup' component={SignUpPage} />
     <Route path='/login' component={LoginPage} />
     <Route path='/logout' component={LogoutPage} />
-    <Route path='/match' component ={GamePage} />
+    <Route path='/match/:matchId' component ={GamePage} />
   </div>
   </BrowserRouter>
   </MuiThemeProvider>

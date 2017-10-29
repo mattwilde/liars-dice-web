@@ -4,6 +4,7 @@ import Home from '../components/Home.jsx';
 import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
 import socketIOClient from "socket.io-client";
+import { Redirect } from 'react-router';
 
 class HomePage extends React.Component {
   /**
@@ -13,6 +14,7 @@ class HomePage extends React.Component {
     super(props);
     this.state = {
       user: Auth.getUser(), //TODO: This probably shouldn't be a state? (maw)
+      redirect: null,
 
       // matchmaking states
       modeValue: 'casual',
@@ -20,10 +22,9 @@ class HomePage extends React.Component {
       lookingForMatchString: `Looking for match... \n(mode: casual, server: public)`,
       isFindingMatch: false,
 
-
       // socket stuff?
-      response: false,
       endpoint: `${Config.getDbUrl()}`,
+      socket: null,
     };
   }
 
@@ -37,11 +38,33 @@ class HomePage extends React.Component {
 
   componentDidMount() {
     const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.on("found-match", data => {
-      this.setState({ response: data });
-      console.log('RECEIVED MESSAGE FROM SERVER:', data);
+    let socket = socketIOClient(endpoint);
+    socket.emit('joinroom', 'matchmaking'); // join matchmaking room to only get notifications involving matchmaking...
+
+    // handle 'found-match' event.  This occurs when the server creates a match and pushes a notification to the clients, that a match has been created.
+    // it is then the clients responsibility to join the match...
+    socket.on("found-match", match => {
+      console.log('PUSH FROM SERVER:', match);
+
+      if (match.users.includes(this.state.user._id)) {
+        console.log('User is listed in this match!  Redirecting to match...');
+        this.setState({ redirect: `/match/${match._id}` });
+      }
+      else {
+        console.log('User is NOT listed in this match! Still waiting for a match...');
+      }
     });
+
+    // save socket in context. will need to disconnect if user leaves page.
+    this.setState({ socket: socket });
+  }
+
+  componentWillUnmount() {
+    // remember to disconnect before leaving this page, otherwise user will be connected multiple times...
+    if (this.state.socket) {
+      console.log('Disconnecting from socket...');
+      this.state.socket.disconnect(true);
+    }
   }
 
   handlers = {
@@ -158,6 +181,12 @@ class HomePage extends React.Component {
    * Render the component.
    */
   render() {
+    const { redirect } = this.state;
+    
+    if (redirect) {
+      return <Redirect to={redirect}/>;
+    }
+
     return (
       <div>
         <PublicHeader />
