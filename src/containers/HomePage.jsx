@@ -3,6 +3,7 @@ import Auth from '../modules/Auth';
 import Home from '../components/Home.jsx';
 import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
+import socketIOClient from "socket.io-client";
 
 class HomePage extends React.Component {
   /**
@@ -18,6 +19,11 @@ class HomePage extends React.Component {
       serverValue: 'public',
       lookingForMatchString: `Looking for match... \n(mode: casual, server: public)`,
       isFindingMatch: false,
+
+
+      // socket stuff?
+      response: false,
+      endpoint: `${Config.getDbUrl()}`,
     };
   }
 
@@ -27,6 +33,15 @@ class HomePage extends React.Component {
   componentWillMount() {
     // check if user is currently in queue and update state if they are.
     this.isUserInQueue();
+  }
+
+  componentDidMount() {
+    const { endpoint } = this.state;
+    const socket = socketIOClient(endpoint);
+    socket.on("found-match", data => {
+      this.setState({ response: data });
+      console.log('RECEIVED MESSAGE FROM SERVER:', data);
+    });
   }
 
   handlers = {
