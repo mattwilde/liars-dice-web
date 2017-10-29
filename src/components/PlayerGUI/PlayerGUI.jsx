@@ -8,4 +8,14 @@ class PlayerGUI extends React.Component {
 
     };
   }
+  render() {
+    <div>
+      <Cup />
+      <Die />
+      <Label />
+      <BetDisplay />
+    </div>
+  };
 }
+
+export default PlayerGUI
