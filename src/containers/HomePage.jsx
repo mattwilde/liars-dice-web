@@ -46,7 +46,7 @@ class HomePage extends React.Component {
     socket.on("found-match", match => {
       console.log('PUSH FROM SERVER:', match);
 
-      if (match.users.includes(this.state.user._id)) {
+      if (match.users.map(x => x._id).includes(this.state.user._id)) {
         console.log('User is listed in this match!  Redirecting to match...');
         this.setState({ redirect: `/match/${match._id}` });
       }
