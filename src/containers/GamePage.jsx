@@ -14,7 +14,7 @@ class GamePage extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      matchid: props.match.params.matchId,
+      matchId: props.match.params.matchId,
       mode: null,
       serverValue: null,
       socket: null,
@@ -44,7 +44,7 @@ class GamePage extends React.Component {
       
       // connect to websocket
       let socket = socketIOClient(`${Config.getDbUrl()}`);
-      socket.emit('joinroom', { room: `match ${this.state.matchid}`, userId: Auth.getUser()._id })
+      socket.emit('join-match', { matchId: this.state.matchId, userId: Auth.getUser()._id })
 
       socket.on('match-user-connected', user => {
         console.log(`Received new user object`, user);
@@ -131,7 +131,7 @@ class GamePage extends React.Component {
     }
 
     //push update to server 
-    this.state.socket.emit('active-table-position', {matchId: this.state.matchid, activeTablePosition: newActiveTablePosition});
+    this.state.socket.emit('active-table-position', {matchId: this.state.matchId, activeTablePosition: newActiveTablePosition});
   }
 
   render() {
