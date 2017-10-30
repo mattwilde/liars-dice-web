@@ -4,6 +4,11 @@ import BoardImage from '../components/GameBoard/BoardImage.jsx';
 import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
 import socketIOClient from "socket.io-client";
+import RaisedButton from 'material-ui/RaisedButton';
+
+const styles = {
+  raisedButton: {margin: 12},
+};
 
 class GamePage extends React.Component {
   constructor(props){
@@ -13,19 +18,19 @@ class GamePage extends React.Component {
       mode: null,
       serverValue: null,
       socket: null,
-      users: [],
+      users: [], // users should be in correct table position order
       connectedUsers: [],
+      activeTablePosition: -1,
     };
   }
   
-  compenentWillMount() {
+  componentWillMount() {
   }
   
   componentDidMount() {
     // get match and set initial state properties. Don't do anything else until we get initial match info.
     this.getCurrentMatch(this.props.match.params.matchId).then((match) => {
       // once we get a match object...
-      
       // set initial states here:
       this.setState({mode: match.mode}); // set mode.
       if (match.users.length <= 6) {
@@ -54,6 +59,12 @@ class GamePage extends React.Component {
         else if (user.connection_status !== 'connected' && connectedUsers.includes(user._id)) { // if user sent down is NOT connected then remove them from connected user array
           connectedUsers.splice(connectedUsers.indexOf(user._id), 1);
         }
+      });
+
+      // handle active-table-position updates
+      socket.on('active-table-position', newActivePosition => {
+        console.log('PUSH FROM SERVER:', 'active-table-position', newActivePosition);
+        this.setState({activeTablePosition: newActivePosition});
       });
 
       this.setState({ socket: socket });
@@ -107,38 +118,58 @@ class GamePage extends React.Component {
     });
   };
 
+  //TODO: This is just for testing out functionality before UI is totally built out. will need to remove at some point... (maw)
+  onClickNextPlayer = () => {
+    let newActiveTablePosition = 1;
+    if (this.state.users.length === this.state.activeTablePosition) {
+      newActiveTablePosition = 1;
+      this.setState({ activeTablePosition: newActiveTablePosition });
+    }
+    else {
+      newActiveTablePosition = this.state.activeTablePosition + 1;
+      this.setState({ activeTablePosition: newActiveTablePosition });
+    }
+
+    //push update to server 
+    this.state.socket.emit('active-table-position', {matchId: this.state.matchid, activeTablePosition: newActiveTablePosition});
+  }
+
   render() {
     const users = this.state.users;
     if (typeof users !== 'undefined') {
-      var playerGUIS = users.map(function(user){
+      console.log(users);
+      var playerGUIS = users.map((user, index) => {
         //return <li><PlayerGUI user={user}/></li>
-        return <li>{user}</li>
+        return (
+          <div>
+            {'{'}
+            <pre>  _id: {user}</pre>
+            <pre>  table_position: {index + 1}</pre>
+            <pre>  connection_status: {this.state.connectedUsers.indexOf(user) !== -1 ? 'connected' : 'not connected'}</pre>
+            {'},'}
+          </div>
+        );
       });
     } else {
       var playerGUIS = 'Waiting for players to join match...'
     }
 
-    const connectedUsers = this.state.connectedUsers;
-    if (connectedUsers) {
-      var connectedPlayers = connectedUsers.map(function(user){
-        //return <li><PlayerGUI user={user}/></li>
-        return <li>{user}</li>
-      });
-    } else {
-      var connectedPlayers = 'Waiting for players to join match...'
-    }
-
     return (
       <div>
+        Match properties
+        <div>
+          <pre>  mode: {this.state.mode}</pre>          
+          <pre>  active_table_position: {this.state.activeTablePosition}</pre>          
+        </div>        
         Match Players
-        <ul>
+        <div>
           {playerGUIS}
-        </ul>
-        
-        Connected Players
-        <ul>
-          {connectedPlayers}
-        </ul>
+        </div>
+
+        <RaisedButton label="Next Player"
+                onClick={this.onClickNextPlayer}
+                primary={true} 
+                style={styles.raisedButton} />
       </div>
     )
     //  <div className="container">
