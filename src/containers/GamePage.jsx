@@ -156,6 +156,9 @@ class GamePage extends React.Component {
 
     return (
       <div>
+        <PublicHeader /> {// this is here for quick and easy home button for quick testing nav
+        }
+
         Match properties
         <div>
           <pre>  mode: {this.state.mode}</pre>          
