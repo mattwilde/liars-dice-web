@@ -5,6 +5,7 @@ import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
 import socketIOClient from "socket.io-client";
 import RaisedButton from 'material-ui/RaisedButton';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 
 const styles = {
   raisedButton: {margin: 12},
@@ -14,28 +15,43 @@ class GamePage extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      matchId: props.match.params.matchId,
-      mode: null,
       serverValue: null,
       socket: null,
-      users: [], // users should be in correct table position order
+      
       connectedUsers: [],
+      
+      // from current-matches collection
+      matchId: props.match.params.matchId,  // match._id
+      mode: null,                           // match.mode
+      minBet: -1,                           // match.minBet
+      maxBet: -1,                           // match.maxBet
+      maxBuyIn: -1,                         // match.maxBuyIn
+
+      users: [], // users should be in correct table position order
+
       activeTablePosition: -1,
     };
+
+
+
   }
   
   componentWillMount() {
   }
   
   componentDidMount() {
+    this.setState({ test: [{value: 1}, {}]});
+    console.log('here');
+    console.log(this.state.test);
     // get match and set initial state properties. Don't do anything else until we get initial match info.
     this.getCurrentMatch(this.props.match.params.matchId).then((match) => {
       // once we get a match object...
       // set initial states here:
       this.setState({mode: match.mode}); // set mode.
       if (match.users.length <= 6) {
-        this.setState({users: match.users.map(x => x._id)}); // set users.
-        this.setState({connectedUsers: match.users.filter(x => x.connection_status === 'connected').map(x => x._id)}); // set users.
+        this.setState({users: match.users});
+        // this.setState({users: match.users.map(x => x._id)}); // set users.
+        // this.setState({connectedUsers: match.users.filter(x => x.connection_status === 'connected').map(x => x._id)}); // set users.
       }
       else {
         console.log('You gave me a 7th person.... idiot.'); // figure out exactly how to log this...
@@ -138,14 +154,29 @@ class GamePage extends React.Component {
     const users = this.state.users;
     if (typeof users !== 'undefined') {
       console.log(users);
-      var playerGUIS = users.map((user, index) => {
+      var playerGUIS = users.map(user => {
         //return <li><PlayerGUI user={user}/></li>
         return (
           <div>
             {'{'}
-            <pre>  _id: {user}</pre>
-            <pre>  table_position: {index + 1}</pre>
-            <pre>  connection_status: {this.state.connectedUsers.indexOf(user) !== -1 ? 'connected' : 'not connected'}</pre>
+            <pre>  _id: {user._id}</pre>
+            <pre>  table_position: {user.table_position}</pre>
+            <pre>  connection_status: {user.connection_status}</pre>
+            <pre>  chip_amount: {user.chip_amount}</pre>
+            <pre>  dice: {user.dice ? '' : 'null'}</pre>
+            
+            {user.dice && user.dice.map(die => {
+              return (
+                <div>
+                  <pre>    {'{'}</pre>
+                  <pre>      _id: {die._id}</pre>
+                  <pre>      face: {die.face}</pre>
+                  <pre>      hidden: {die.hidden.toString()}</pre>
+                  <pre>      lost: {die.lost.toString()}</pre>
+                  <pre>    {'},'}</pre>
+                </div>
+              );
+            })}
             {'},'}
           </div>
         );
@@ -158,16 +189,26 @@ class GamePage extends React.Component {
       <div>
         <PublicHeader /> {// this is here for quick and easy home button for quick testing nav
         }
-
-        Match properties
-        <div>
-          <pre>  mode: {this.state.mode}</pre>          
-          <pre>  active_table_position: {this.state.activeTablePosition}</pre>          
-        </div>        
-        Match Players
-        <div>
-          {playerGUIS}
-        </div>
+        <Card>
+          <CardHeader
+            title="State Data"
+            subtitle=""
+            actAsExpander={true}
+            showExpandableButton={true}
+          />
+          <CardText expandable={true}>
+        
+          Match properties
+          <div>
+            <pre>  mode: {this.state.mode}</pre>          
+            <pre>  active_table_position: {this.state.activeTablePosition}</pre>          
+          </div>        
+          Match Players
+          <div>
+            {playerGUIS}
+          </div>
+          </CardText>
+        </Card>
 
         <RaisedButton label="Next Player"
                 onClick={this.onClickNextPlayer}
