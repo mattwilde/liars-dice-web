@@ -6,8 +6,8 @@ class Auth {
    * @param {string} token
    */
   static authenticateUser(token, user) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user)); // convert to string to store
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('user', JSON.stringify(user)); // convert to string to store
   }
 
   /**
@@ -16,7 +16,7 @@ class Auth {
    * @returns {boolean}
    */
   static isUserAuthenticated() {
-    return localStorage.getItem('token') !== null;
+    return sessionStorage.getItem('token') !== null;
   }
 
   /**
@@ -24,7 +24,7 @@ class Auth {
    *
    */
   static deauthenticateUser() {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
   }
 
   /**
@@ -34,11 +34,11 @@ class Auth {
    */
 
   static getToken() {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
 
   static getUser() {
-    return JSON.parse(localStorage.getItem('user'));
+    return JSON.parse(sessionStorage.getItem('user'));
   }
 }
 

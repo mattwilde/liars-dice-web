@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardTitle, CardText, CardActions } from 'material-ui/Card';
-// import FlatButton from 'material-ui/FlatButton';
+import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -28,6 +28,16 @@ const Home = ({ user, state, handlers }) => (
                 ) : 'Bro, play some Liars Dice, breh.'
               }
             </CardText>
+            <CardActions>
+              <FlatButton label="Drop current-matches" 
+                onClick={handlers.handleClickDropCurrentMatches}
+                primary={true} 
+                style={styles.raisedButton} />
+                <FlatButton label="Drop matchmaking-queued-users" 
+                onClick={handlers.handleClickDropMatchmakingQueuedUsers}
+                primary={true} 
+                style={styles.raisedButton} />
+            </CardActions>
             {/* {secretData && <CardText style={{ fontSize: '16px', color: 'green' }}>{secretData}</CardText>} */}
           </Card>
         </td>

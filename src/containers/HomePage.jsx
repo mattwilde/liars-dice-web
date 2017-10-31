@@ -39,7 +39,7 @@ class HomePage extends React.Component {
   componentDidMount() {
     const { endpoint } = this.state;
     let socket = socketIOClient(endpoint);
-    socket.emit('joinroom', 'matchmaking'); // join matchmaking room to only get notifications involving matchmaking...
+    socket.emit('join-room', 'matchmaking'); // join matchmaking room to only get notifications involving matchmaking...
 
     // handle 'found-match' event.  This occurs when the server creates a match and pushes a notification to the clients, that a match has been created.
     // it is then the clients responsibility to join the match...
@@ -82,6 +82,14 @@ class HomePage extends React.Component {
     },
     handleClickCancelMatch: () => { // event handler for clicking Cancel finding match button
       this.removeUserFromQueue();
+    },
+    handleClickDropCurrentMatches: () => { // event handler for clicking Drop current-matches button
+      this.removeAllCurrentMatches();
+      window.location.reload();
+    },
+    handleClickDropMatchmakingQueuedUsers: () => { // event handler for clicking Drop matchmaking-queued-users button
+      this.removeAllUsersFromQueue();
+      window.location.reload();
     },
   };
   
@@ -147,6 +155,56 @@ class HomePage extends React.Component {
       .catch(res => console.log('fail',res));
   };
   
+  /**
+   * removes all the current users from the queue.  updates state 'isFindingMatch' to indicate to UI 
+   * whether user is currently finding match.
+   */
+  removeAllUsersFromQueue = () => {
+    fetch(`${Config.getDbUrl()}/db/matchmaking_queued_users/`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "DELETE",
+    })
+      .then(res => {
+        res.json().then(body => { // failure
+          if (res.status === 200) { // success
+            console.log('All users deleted from the queue');
+          }
+          else {
+            console.log(`Unexpected error: ${body.errmsg}`);
+          }
+        });
+      })
+      .catch(res => console.log('fail',res));
+  };
+
+  /**
+   * removes all current matches.  updates state 'isFindingMatch' to indicate to UI 
+   * whether user is currently finding match.
+   */
+  removeAllCurrentMatches = () => {
+    fetch(`${Config.getDbUrl()}/db/current_matches/`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "DELETE",
+    })
+      .then(res => {
+        res.json().then(body => { // failure
+          if (res.status === 200) { // success
+            console.log('All matches deleted from current matches');
+          }
+          else {
+            console.log(`Unexpected error: ${body.errmsg}`);
+          }
+        });
+      })
+      .catch(res => console.log('fail',res));
+  };
+
   /**
    * checks if the current user is in the matchmaking queue.  updates state 'isFindingMatch' to indicate to UI 
    * whether user is currently finding match.
