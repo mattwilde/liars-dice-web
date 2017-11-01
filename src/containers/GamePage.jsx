@@ -153,13 +153,11 @@ class GamePage extends React.Component {
     //} else {
     //  var playerGUIS = 'Waiting for players to join match...'
     //}
-
     return (
       this.state.users.map(user => 
         <div>
           <PlayerGUI key={user} />
         </div>
-        
       )  
     )
   }
