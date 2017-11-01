@@ -4,8 +4,7 @@ import BoardImage from '../components/GameBoard/BoardImage.jsx';
 import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
 import socketIOClient from "socket.io-client";
-import RaisedButton from 'material-ui/RaisedButton';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import PlayerGUI from "../components/PlayerGUI/PlayerGUI";
 
 import TestGUI from '../components/Debug/TestGUI'; // testing only (maw)
 
@@ -37,6 +36,7 @@ class GamePage extends React.Component {
   }
   
   componentWillMount() {
+
   }
   
   componentDidMount() {
@@ -87,10 +87,6 @@ class GamePage extends React.Component {
         this.setState({users: users});
         this.setState({pot: data.pot});
         this.setState({activeTablePosition: data.active_table_position});
-        this.setState({minBet: data.min_bet});
-        this.setState({maxBet: data.max_bet});
-        this.setState({maxBuyIn: data.max_buy_in});
-        this.setState({diceChipPool: data.dice_chip_pool});
       });
 
       this.setState({ socket: socket });
@@ -155,11 +151,23 @@ class GamePage extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <TestGUI state={this.state} isCurrentPlayer={this.calculateIsCurrentPlayer()}/>
-      </div>
-    )
+    if (Config.isTestDisplay) {
+      return (
+        <div>
+          <TestGUI state={this.state} isCurrentPlayer={this.calculateIsCurrentPlayer()}/>
+        </div>
+      )
+    }
+    else {
+      return (
+        this.state.users.map(user => 
+          <div>
+            <PlayerGUI key={user} />
+          </div>
+          
+        )  
+      )
+    }
   }
 }
 

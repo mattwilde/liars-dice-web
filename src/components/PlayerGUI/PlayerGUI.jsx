@@ -1,4 +1,7 @@
 import React from 'react';
+import Cup from "../PlayerGUI/Cup";
+import Label from "../PlayerGUI/Label";
+import BetDisplay from "../PlayerGUI/BetDisplay";
 
 class PlayerGUI extends React.Component {
   constructor(props) {
@@ -9,13 +12,14 @@ class PlayerGUI extends React.Component {
     };
   }
   render() {
-    <div>
-      <Cup />
-      <Die />
-      <Label />
-      <BetDisplay />
-    </div>
-  };
+    return (
+      <div>
+        <Cup />
+        <Label />
+        <BetDisplay />
+      </div>
+    )
+  }
 }
 
 export default PlayerGUI

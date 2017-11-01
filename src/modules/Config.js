@@ -7,6 +7,8 @@ class Config {
       return 'http://localhost:3001'
     }
   }
+
+  static isTestDisplay = true;
 }
 
 export default Config;
