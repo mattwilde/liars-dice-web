@@ -18,7 +18,7 @@ class GamePage extends React.Component {
       serverValue: null,
       socket: null,
       
-      connectedUsers: [],
+      // connectedUsers: [],
       
       // from current-matches collection
       matchId: props.match.params.matchId,  // match._id
@@ -30,6 +30,7 @@ class GamePage extends React.Component {
       users: [], // users should be in correct table position order
 
       activeTablePosition: -1,
+      pot: 0,
     };
 
 
@@ -40,9 +41,6 @@ class GamePage extends React.Component {
   }
   
   componentDidMount() {
-    this.setState({ test: [{value: 1}, {}]});
-    console.log('here');
-    console.log(this.state.test);
     // get match and set initial state properties. Don't do anything else until we get initial match info.
     this.getCurrentMatch(this.props.match.params.matchId).then((match) => {
       // once we get a match object...
@@ -63,24 +61,28 @@ class GamePage extends React.Component {
       socket.emit('join-match', { matchId: this.state.matchId, userId: Auth.getUser()._id })
 
       socket.on('match-user-connected', user => {
-        console.log(`Received new user object`, user);
-
-        // update user connections in the state.
-        let connectedUsers = this.state.connectedUsers;
-
-        if (user.connection_status === 'connected' && !connectedUsers.includes(user._id)) { // if user sent down is connected and not part of connected user array, then add them
-          connectedUsers.push(user._id);
-          this.setState({connectedUsers: connectedUsers });
-        }
-        else if (user.connection_status !== 'connected' && connectedUsers.includes(user._id)) { // if user sent down is NOT connected then remove them from connected user array
-          connectedUsers.splice(connectedUsers.indexOf(user._id), 1);
-        }
+        console.log('SOCKET RECEIVE:', 'match-user-connected', user);
+        const users = this.state.users;
+        let userIdx = users.findIndex(x => x._id === user._id);
+        users[userIdx].connection_status = user.connection_status;
+        this.setState({users: users});
       });
 
-      // handle active-table-position updates
       socket.on('active-table-position', newActivePosition => {
-        console.log('PUSH FROM SERVER:', 'active-table-position', newActivePosition);
+        console.log('SOCKET RECEIVE:', 'active-table-position', newActivePosition);
         this.setState({activeTablePosition: newActivePosition});
+      });
+
+      socket.on('player-action-pass', data => {
+        console.log('SOCKET RECEIVE:', 'player-action-pass', data);
+        const users = this.state.users;
+        // update state
+        let userIdx = users.findIndex(x => x._id === data._id);
+        users[userIdx].previous_action = data.previous_action;
+        users[userIdx].chip_amount = data.chip_amount;
+        this.setState({users: users});
+        this.setState({pot: data.pot});
+        this.setState({activeTablePosition: data.active_table_position});
       });
 
       this.setState({ socket: socket });
@@ -150,6 +152,12 @@ class GamePage extends React.Component {
     this.state.socket.emit('active-table-position', {matchId: this.state.matchId, activeTablePosition: newActiveTablePosition});
   }
 
+  onClickPass = () => {
+    let data = { matchId: this.state.matchId, userId: Auth.getUser()._id };
+    console.log('SOCKET EMIT TO SERVER:', 'player-action-pass', data);
+    this.state.socket.emit('player-action-pass', data);
+  }
+
   render() {
     const users = this.state.users;
     if (typeof users !== 'undefined') {
@@ -185,6 +193,15 @@ class GamePage extends React.Component {
       var playerGUIS = 'Waiting for players to join match...'
     }
 
+    var isCurrentPlayer = false;
+    if (users && users.length > 0) {
+        console.log('here', Auth.getUser()._id, users);
+        let playerIndex = users.findIndex(x=> x._id === Auth.getUser()._id);
+        console.log('PLAYER INDEX:', playerIndex)
+        console.log(users[playerIndex]);
+        isCurrentPlayer = this.state.activeTablePosition === users[playerIndex].table_position;
+    }
+
     return (
       <div>
         <PublicHeader /> {// this is here for quick and easy home button for quick testing nav
@@ -211,9 +228,15 @@ class GamePage extends React.Component {
         </Card>
 
         <RaisedButton label="Next Player"
-                onClick={this.onClickNextPlayer}
-                primary={true} 
-                style={styles.raisedButton} />
+          onClick={this.onClickNextPlayer}
+          primary={true} 
+          style={styles.raisedButton} />
+        <RaisedButton label="Pass"
+          onClick={this.onClickPass}
+          primary={true} 
+          // disable if not current player
+          disabled={!isCurrentPlayer}
+          style={styles.raisedButton} />
       </div>
     )
     //  <div className="container">
