@@ -61,7 +61,7 @@ class GamePage extends React.Component {
       }
       
       // connect to websocket
-      let socket = socketIOClient(`${Config.getDbUrl()}`);
+      let socket = socketIOClient(`${Config.getDbUrl()}`, { query: {token: Auth.getToken()}});
       socket.emit('join-match', { matchId: this.state.matchId, userId: Auth.getUser()._id })
 
       socket.on('match-user-connected', user => {

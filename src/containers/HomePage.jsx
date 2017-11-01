@@ -38,7 +38,8 @@ class HomePage extends React.Component {
 
   componentDidMount() {
     const { endpoint } = this.state;
-    let socket = socketIOClient(endpoint);
+    let socket = socketIOClient(endpoint, { query: {token: Auth.getToken()}});
+    // socket.connect({ query: {token: Auth.getToken()}});
     socket.emit('join-room', 'matchmaking'); // join matchmaking room to only get notifications involving matchmaking...
 
     // handle 'found-match' event.  This occurs when the server creates a match and pushes a notification to the clients, that a match has been created.
@@ -53,6 +54,10 @@ class HomePage extends React.Component {
       else {
         console.log('User is NOT listed in this match! Still waiting for a match...');
       }
+    });
+
+    socket.on('disconnect', function () {
+      console.log('disconnected');
     });
 
     // save socket in context. will need to disconnect if user leaves page.
