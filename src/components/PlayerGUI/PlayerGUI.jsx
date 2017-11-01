@@ -12,8 +12,6 @@ class PlayerGUI extends React.Component {
     };
   }
   render() {
-
-
     return (
       <div>
         <Cup />
