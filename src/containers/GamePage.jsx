@@ -4,8 +4,7 @@ import BoardImage from '../components/GameBoard/BoardImage.jsx';
 import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
 import socketIOClient from "socket.io-client";
-import RaisedButton from 'material-ui/RaisedButton';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import PlayerGUI from "../components/PlayerGUI/PlayerGUI";
 
 const styles = {
   raisedButton: {margin: 12},
@@ -37,12 +36,10 @@ class GamePage extends React.Component {
   }
   
   componentWillMount() {
+
   }
   
   componentDidMount() {
-    this.setState({ test: [{value: 1}, {}]});
-    console.log('here');
-    console.log(this.state.test);
     // get match and set initial state properties. Don't do anything else until we get initial match info.
     this.getCurrentMatch(this.props.match.params.matchId).then((match) => {
       // once we get a match object...
@@ -151,70 +148,19 @@ class GamePage extends React.Component {
   }
 
   render() {
-    const users = this.state.users;
-    if (typeof users !== 'undefined') {
-      console.log(users);
-      var playerGUIS = users.map(user => {
-        //return <li><PlayerGUI user={user}/></li>
-        return (
-          <div>
-            {'{'}
-            <pre>  _id: {user._id}</pre>
-            <pre>  table_position: {user.table_position}</pre>
-            <pre>  connection_status: {user.connection_status}</pre>
-            <pre>  chip_amount: {user.chip_amount}</pre>
-            <pre>  dice: {user.dice ? '' : 'null'}</pre>
-            
-            {user.dice && user.dice.map(die => {
-              return (
-                <div>
-                  <pre>    {'{'}</pre>
-                  <pre>      _id: {die._id}</pre>
-                  <pre>      face: {die.face}</pre>
-                  <pre>      hidden: {die.hidden.toString()}</pre>
-                  <pre>      lost: {die.lost.toString()}</pre>
-                  <pre>    {'},'}</pre>
-                </div>
-              );
-            })}
-            {'},'}
-          </div>
-        );
-      });
-    } else {
-      var playerGUIS = 'Waiting for players to join match...'
-    }
+    //if (typeof this.state.users !== 'undefined') {
+    //  console.log(users);
+    //} else {
+    //  var playerGUIS = 'Waiting for players to join match...'
+    //}
 
     return (
-      <div>
-        <PublicHeader /> {// this is here for quick and easy home button for quick testing nav
-        }
-        <Card>
-          <CardHeader
-            title="State Data"
-            subtitle=""
-            actAsExpander={true}
-            showExpandableButton={true}
-          />
-          <CardText expandable={true}>
+      this.state.users.map(user => 
+        <div>
+          <PlayerGUI key={user} />
+        </div>
         
-          Match properties
-          <div>
-            <pre>  mode: {this.state.mode}</pre>          
-            <pre>  active_table_position: {this.state.activeTablePosition}</pre>          
-          </div>        
-          Match Players
-          <div>
-            {playerGUIS}
-          </div>
-          </CardText>
-        </Card>
-
-        <RaisedButton label="Next Player"
-                onClick={this.onClickNextPlayer}
-                primary={true} 
-                style={styles.raisedButton} />
-      </div>
+      )  
     )
   }
 }
