@@ -7,6 +7,8 @@ import socketIOClient from "socket.io-client";
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 
+import TestGUI from '../components/Debug/TestGUI'; // testing only (maw)
+
 const styles = {
   raisedButton: {margin: 12},
 };
@@ -32,9 +34,6 @@ class GamePage extends React.Component {
       activeTablePosition: -1,
       pot: 0,
     };
-
-
-
   }
   
   componentWillMount() {
@@ -47,7 +46,12 @@ class GamePage extends React.Component {
       // set initial states here:
       this.setState({mode: match.mode}); // set mode.
       if (match.users.length <= 6) {
-        this.setState({users: match.users});
+        this.setState({users: match.users,
+          minBet: match.min_bet,
+          maxBet: match.max_bet,
+          maxBuyIn: match.max_buy_in,
+          pot: match.pot
+        });
         // this.setState({users: match.users.map(x => x._id)}); // set users.
         // this.setState({connectedUsers: match.users.filter(x => x.connection_status === 'connected').map(x => x._id)}); // set users.
       }
@@ -83,6 +87,10 @@ class GamePage extends React.Component {
         this.setState({users: users});
         this.setState({pot: data.pot});
         this.setState({activeTablePosition: data.active_table_position});
+        this.setState({minBet: data.min_bet});
+        this.setState({maxBet: data.max_bet});
+        this.setState({maxBuyIn: data.max_buy_in});
+        this.setState({diceChipPool: data.dice_chip_pool});
       });
 
       this.setState({ socket: socket });
@@ -136,115 +144,22 @@ class GamePage extends React.Component {
     });
   };
 
-  //TODO: This is just for testing out functionality before UI is totally built out. will need to remove at some point... (maw)
-  onClickNextPlayer = () => {
-    let newActiveTablePosition = 1;
-    if (this.state.users.length === this.state.activeTablePosition) {
-      newActiveTablePosition = 1;
-      this.setState({ activeTablePosition: newActiveTablePosition });
+  calculateIsCurrentPlayer = () => {
+    let isCurrentPlayer = false;
+    const users = this.state.users;
+    if (users && users.length > 0) {
+        let playerIndex = users.findIndex(x=> x._id === Auth.getUser()._id);
+        isCurrentPlayer = (this.state.activeTablePosition === users[playerIndex].table_position);
     }
-    else {
-      newActiveTablePosition = this.state.activeTablePosition + 1;
-      this.setState({ activeTablePosition: newActiveTablePosition });
-    }
-
-    //push update to server 
-    this.state.socket.emit('active-table-position', {matchId: this.state.matchId, activeTablePosition: newActiveTablePosition});
-  }
-
-  onClickPass = () => {
-    let data = { matchId: this.state.matchId, userId: Auth.getUser()._id };
-    console.log('SOCKET EMIT TO SERVER:', 'player-action-pass', data);
-    this.state.socket.emit('player-action-pass', data);
+    return isCurrentPlayer;
   }
 
   render() {
-    const users = this.state.users;
-    if (typeof users !== 'undefined') {
-      console.log(users);
-      var playerGUIS = users.map(user => {
-        //return <li><PlayerGUI user={user}/></li>
-        return (
-          <div>
-            {'{'}
-            <pre>  _id: {user._id}</pre>
-            <pre>  table_position: {user.table_position}</pre>
-            <pre>  connection_status: {user.connection_status}</pre>
-            <pre>  chip_amount: {user.chip_amount}</pre>
-            <pre>  dice: {user.dice ? '' : 'null'}</pre>
-            
-            {user.dice && user.dice.map(die => {
-              return (
-                <div>
-                  <pre>    {'{'}</pre>
-                  <pre>      _id: {die._id}</pre>
-                  <pre>      face: {die.face}</pre>
-                  <pre>      hidden: {die.hidden.toString()}</pre>
-                  <pre>      lost: {die.lost.toString()}</pre>
-                  <pre>    {'},'}</pre>
-                </div>
-              );
-            })}
-            {'},'}
-          </div>
-        );
-      });
-    } else {
-      var playerGUIS = 'Waiting for players to join match...'
-    }
-
-    var isCurrentPlayer = false;
-    if (users && users.length > 0) {
-        console.log('here', Auth.getUser()._id, users);
-        let playerIndex = users.findIndex(x=> x._id === Auth.getUser()._id);
-        console.log('PLAYER INDEX:', playerIndex)
-        console.log(users[playerIndex]);
-        isCurrentPlayer = this.state.activeTablePosition === users[playerIndex].table_position;
-    }
-
     return (
       <div>
-        <PublicHeader /> {// this is here for quick and easy home button for quick testing nav
-        }
-        <Card>
-          <CardHeader
-            title="State Data"
-            subtitle=""
-            actAsExpander={true}
-            showExpandableButton={true}
-          />
-          <CardText expandable={true}>
-        
-          Match properties
-          <div>
-            <pre>  mode: {this.state.mode}</pre>          
-            <pre>  active_table_position: {this.state.activeTablePosition}</pre>          
-          </div>        
-          Match Players
-          <div>
-            {playerGUIS}
-          </div>
-          </CardText>
-        </Card>
-
-        <RaisedButton label="Next Player"
-          onClick={this.onClickNextPlayer}
-          primary={true} 
-          style={styles.raisedButton} />
-        <RaisedButton label="Pass"
-          onClick={this.onClickPass}
-          primary={true} 
-          // disable if not current player
-          disabled={!isCurrentPlayer}
-          style={styles.raisedButton} />
+        <TestGUI state={this.state} isCurrentPlayer={this.calculateIsCurrentPlayer()}/>
       </div>
     )
-    //  <div className="container">
-    //    <PlayerGUI />
-    //    <PublicHeader />
-    //    <BoardImage />
-    //  </div>
-    //)
   }
 }
 
