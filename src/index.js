@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import socketIOClient from "socket.io-client";
-// import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
-//import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
 // import App from './App';
@@ -15,6 +15,8 @@ import SignUpPage from './containers/SignUpPage';
 import LoginPage from './containers/LoginPage';
 import LogoutPage from './containers/LogoutPage';
 import GamePage from './containers/GamePage';
+//for testing
+import PageLayoutTest from './containers/PageLayoutTest'
 
 import { BrowserRouter, Route } from 'react-router-dom';
 
@@ -42,6 +44,7 @@ ReactDOM.render((
     <Route path='/login' component={LoginPage} />
     <Route path='/logout' component={LogoutPage} />
     <Route path='/match/:matchId' component ={GamePage} />
+    <Route path ='/fakematch' component = {PageLayoutTest} />
   </div>
   </BrowserRouter>
   </MuiThemeProvider>

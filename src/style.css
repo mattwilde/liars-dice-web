@@ -19,6 +19,10 @@ a:hover {
   color: rgba(0,151,167, 0.8);
 }
 
+img {
+    margin: auto;
+}
+
 .text-center {
   text-align: center;
 }
@@ -82,3 +86,22 @@ a:hover {
     height: 50px;
     width:  100px;
 }
+
+/*Testing*/
+.main-grid{
+    margin-top: 10px
+}
+
+.game-board{
+    width: 100%;
+    margin: 20px auto;
+}
+
+.game-box{
+    border: 3px solid rgb(236, 37, 37);
+    height: 40px;
+}
+
+ .player-gui{
+    border: 2px solid rgb(255, 255, 255);
+} 

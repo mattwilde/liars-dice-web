@@ -5,7 +5,7 @@ import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
 import socketIOClient from "socket.io-client";
 import PlayerGUI from "../components/PlayerGUI/PlayerGUI";
-
+import { Grid, Row, Col  } from 'react-bootstrap';
 import TestGUI from '../components/Debug/TestGUI'; // testing only (maw)
 
 const styles = {
@@ -159,12 +159,38 @@ class GamePage extends React.Component {
       )
     }
     else {
+
+      const gridInstance = (
+        <Grid fluid={true}>
+          <Row>
+            <Col md={2} mdOffset={4}>Top left
+            </Col>
+            <Col md={2} mdOffset={6}>Top right
+            </Col>
+          </Row>
+          <Row>
+            <Col md={2} mdOffset={2}>Left
+            </Col>
+            <Col md={4} mdOffset={4}>Board
+            </Col>
+            <Col md={2} mdOffset={8}>Right
+            </Col>
+          </Row>
+          <Row>
+            <Col md={2} mdOffset={4}>Bot left
+            </Col>
+            <Col md={2} mdOffset={6}>Bot right
+            </Col>
+          </Row>
+        </Grid>
+      )
+
       return (
         this.state.users.map(user => 
-          <div>
-            <PlayerGUI key={user} />
-          </div>
-          
+         {gridInstance}
+          //<div>
+          //  <PlayerGUI key={user} />
+          //</div>
         )  
       )
     }
