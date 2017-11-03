@@ -28,7 +28,7 @@ class Cup extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col md={4}>
+          <Col md={4} mdOffset={2}>
             <Die dieValue={this.state.diceValues[3]} />
           </Col>
           <Col md={4}>

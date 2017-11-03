@@ -19,6 +19,10 @@ a:hover {
   color: rgba(0,151,167, 0.8);
 }
 
+img {
+    margin: auto;
+}
+
 .text-center {
   text-align: center;
 }
