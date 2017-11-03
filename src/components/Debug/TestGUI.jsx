@@ -2,7 +2,7 @@ import React from 'react';
 import Auth from '../../modules/Auth';
 import PublicHeader from '../../components/PublicHeader';
 import Config from '../../modules/Config';
-import socketIOClient from "socket.io-client";
+import GameActions from '../../modules/GameActions';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 
@@ -19,38 +19,22 @@ class TestGUI extends React.Component {
 
     // get calculated props
     this.setState({ isCurrentPlayer: props.isCurrentPlayer });
+
+    this.gameActions = new GameActions({
+      matchId: props.state.matchId,
+      socket: props.state.socket,
+    });
   }
 
   componentWillReceiveProps = (props) => {
     this.setState(props.state);
     this.setState({ isCurrentPlayer: props.isCurrentPlayer });
     console.log('componentWillReceiveProps', this.state);
+
+    // push socket down to game actions.
+    this.gameActions.socket = this.state.socket;
   }
 
-  //TODO: This is just for testing out functionality before UI is totally built out. will need to remove at some point... (maw)
-  onClickNextPlayer = () => {
-    let newActiveTablePosition = 1;
-    if (this.state.users.length === this.state.activeTablePosition) {
-      newActiveTablePosition = 1;
-      this.setState({ activeTablePosition: newActiveTablePosition });
-    }
-    else {
-      newActiveTablePosition = this.state.activeTablePosition + 1;
-      this.setState({ activeTablePosition: newActiveTablePosition });
-    }
-
-    //push update to server 
-    this.state.socket.emit('active-table-position', {matchId: this.state.matchId, activeTablePosition: newActiveTablePosition});
-  }
-
-  onClickPass = () => {
-    let data = { matchId: this.state.matchId, userId: Auth.getUser()._id };
-    console.log('SOCKET EMIT TO SERVER:', 'player-action-pass', data);
-    this.state.socket.emit('player-action-pass', data, (err) => {
-      console.log(err);
-    });
-  }
-  
   render() {
     const users = this.state.users;
     if (typeof users !== 'undefined') {
@@ -130,12 +114,14 @@ class TestGUI extends React.Component {
             {playerGUIS}
           </div>
 
-        <RaisedButton label="Next Player"
-          onClick={this.onClickNextPlayer}
+        <RaisedButton label="Bid"
+          onClick={this.gameActions.onClickBid}
           primary={true} 
+          // disable if not current player
+          disabled={!this.state.isCurrentPlayer}
           style={styles.raisedButton} />
         <RaisedButton label="Pass"
-          onClick={this.onClickPass}
+          onClick={this.gameActions.onClickPass}
           primary={true} 
           // disable if not current player
           disabled={!this.state.isCurrentPlayer}
