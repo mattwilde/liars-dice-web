@@ -1,4 +1,5 @@
 import React from 'react'
+import { Image  } from 'react-bootstrap';
 import StarImage from "../../images/die/die_face_star.png";
 import TwoImage from "../../images/die/die_face_two.png";
 import ThreeImage from "../../images/die/die_face_three.png";
@@ -18,9 +19,7 @@ class Die extends React.Component {
 
   render() {
     return(
-    <div>
-      <img src={DIE_IMAGES[this.props.dieValue]} alt=""/>        
-    </div>
+      <Image src={DIE_IMAGES[this.props.dieValue]} alt="Die" responsive/>      
     )
   }
 }
