@@ -25,6 +25,14 @@ class GameActions {
     });
   }
 
+  onClickBidAndReroll = (bid, diceShown) => {
+    let data = { matchId: this.matchId, userId: Auth.getUser()._id, bid: bid, diceShown: diceShown };
+    console.log('SOCKET EMIT TO SERVER:', 'player-action-bid-and-reroll', data);
+    this.socket.emit('player-action-bid-and-reroll', data, (err) => {
+      console.log(err);
+    });
+  }
+
 }
 
 export default GameActions;
