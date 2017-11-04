@@ -4,7 +4,9 @@ import PublicHeader from '../../components/PublicHeader';
 import Config from '../../modules/Config';
 import GameActions from '../../modules/GameActions';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+// import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
+import {Card, CardHeader, CardText, CardActions} from 'material-ui/Card';
 
 const styles = {
   raisedButton: {margin: 12},
@@ -19,6 +21,8 @@ class TestGUI extends React.Component {
 
     // get calculated props
     this.setState({ isCurrentPlayer: props.isCurrentPlayer });
+    this.setState({ bidCount: -1 });
+    this.setState({ bidFace: -1 });
 
     this.gameActions = new GameActions({
       matchId: props.state.matchId,
@@ -56,6 +60,8 @@ class TestGUI extends React.Component {
                 <pre>  table_position: {user.table_position}</pre>
                 <pre>  connection_status: {user.connection_status}</pre>
                 <pre>  chip_amount: {user.chip_amount}</pre>
+                <pre>  previous_action: {user.previous_action['bid'] && `bid: { count: ${user.previous_action['bid']['count']}, face: ${user.previous_action['bid']['face']} }` ||
+                                        user.previous_action['pass'] && `pass: ${user.previous_action['pass']}`}</pre>
                 <Card>
                   <CardHeader
                     title="Dice"
@@ -114,12 +120,36 @@ class TestGUI extends React.Component {
             {playerGUIS}
           </div>
 
-        <RaisedButton label="Bid"
-          onClick={this.gameActions.onClickBid}
-          primary={true} 
-          // disable if not current player
-          disabled={!this.state.isCurrentPlayer}
-          style={styles.raisedButton} />
+        <Card>
+          <CardHeader
+            title="Bid"
+            actAsExpander={true}
+            showExpandableButton={true}
+          />
+          <div expandable={true}>
+          <CardText>
+            <TextField 
+              hintText="How many?"
+              /* value={this.state.bidCount} */
+              onChange={e => this.setState({ bidCount: parseInt(e.target.value) })}
+            />
+            <br />
+            <TextField 
+              hintText="Of what die face?"
+              /* value={this.state.bidFace} */
+              onChange={e => this.setState({ bidFace: parseInt(e.target.value) })}
+            />
+          </CardText>
+          <CardActions>
+            <RaisedButton label="Bid"
+              onClick={() => {this.gameActions.onClickBid({count: this.state.bidCount, face: this.state.bidFace});}}
+              primary={true} 
+              // disable if not current player
+              disabled={!this.state.isCurrentPlayer}
+              style={styles.raisedButton} />
+          </CardActions>
+          </div>
+        </Card>
         <RaisedButton label="Pass"
           onClick={this.gameActions.onClickPass}
           primary={true} 

@@ -89,6 +89,16 @@ class GamePage extends React.Component {
         this.setState({activeTablePosition: data.active_table_position});
       });
 
+      socket.on('player-action-bid', data => {
+        console.log('SOCKET RECEIVE:', 'player-action-bid', data);
+        const users = this.state.users;
+        // update state
+        let userIdx = users.findIndex(x => x._id === data._id);
+        users[userIdx]['previous_action'] = data.previous_action;
+        this.setState({users: users});
+        this.setState({activeTablePosition: data.active_table_position});
+      });
+
       this.setState({ socket: socket });
     }).catch(e => {
       console.log('CATCH', e);

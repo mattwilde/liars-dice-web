@@ -33,7 +33,7 @@ const Home = ({ user, state, handlers }) => (
                 onClick={handlers.handleClickDropCurrentMatches}
                 primary={true} 
                 style={styles.raisedButton} />
-                <FlatButton label="Drop matchmaking-queued-users" 
+              <FlatButton label="Drop matchmaking-queued-users" 
                 onClick={handlers.handleClickDropMatchmakingQueuedUsers}
                 primary={true} 
                 style={styles.raisedButton} />

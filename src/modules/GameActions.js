@@ -6,7 +6,7 @@ class GameActions {
     this.matchId = matchId;
     this.socket = socket;
   }
-  
+
   socket = null
 
   onClickPass = () => {
@@ -17,8 +17,8 @@ class GameActions {
     });
   }
 
-  onClickBid = () => {
-    let data = { matchId: this.matchId, userId: Auth.getUser()._id };
+  onClickBid = (bid) => {
+    let data = { matchId: this.matchId, userId: Auth.getUser()._id, bid: bid };
     console.log('SOCKET EMIT TO SERVER:', 'player-action-bid', data);
     this.socket.emit('player-action-bid', data, (err) => {
       console.log(err);
