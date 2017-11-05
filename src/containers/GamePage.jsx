@@ -5,6 +5,7 @@ import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
 import socketIOClient from "socket.io-client";
 import PlayerGUI from "../components/PlayerGUI/PlayerGUI";
+import GameActions from '../modules/GameActions';
 import { Grid, Row, Col  } from 'react-bootstrap';
 import TestGUI from '../components/Debug/TestGUI'; // testing only (maw)
 
@@ -33,10 +34,17 @@ class GamePage extends React.Component {
       activeTablePosition: -1,
       pot: 0,
     };
+    this.gameActions = new GameActions({
+      matchId: props.match.params.matchId,
+      socket: this.state.socket,
+    });
   }
   
   componentWillMount() {
-
+    //I think this stuff needs to happen here so gameActions gets an active socket
+    let socket = socketIOClient(`${Config.getDbUrl()}`, { query: {token: Auth.getToken()}});
+    this.setState({ socket: socket });
+    this.gameActions.socket = socket;
   }
   
   componentDidMount() {
@@ -61,7 +69,10 @@ class GamePage extends React.Component {
       }
       
       // connect to websocket
-      let socket = socketIOClient(`${Config.getDbUrl()}`, { query: {token: Auth.getToken()}});
+      //maybe use componentWillMount()?
+     // let socket = socketIOClient(`${Config.getDbUrl()}`, { query: {token: Auth.getToken()}});
+      //this.gameActions.socket = socket;
+      let socket = this.state.socket;
       socket.emit('join-match', { matchId: this.state.matchId, userId: Auth.getUser()._id })
 
       socket.on('match-user-connected', user => {
@@ -110,7 +121,7 @@ class GamePage extends React.Component {
         this.setState({activeTablePosition: data.active_table_position});
       });
 
-      this.setState({ socket: socket });
+     this.setState({ socket: socket });
     }).catch(e => {
       console.log('CATCH', e);
     });  
@@ -172,6 +183,7 @@ class GamePage extends React.Component {
   }
 
   render() {
+    console.log(this.gameActions)
     if (Config.isTestDisplay) {
       return (
         <div>
@@ -180,39 +192,50 @@ class GamePage extends React.Component {
       )
     }
     else {
-
+      const columns = this.state.users.map(user =>
+          <Col className="player-gui" md={4}>
+            <PlayerGUI key={user._id} user={user} gameActions={this.gameActions}/>
+          </Col>
+        )
+      
       const gridInstance = (
-        <Grid fluid={true}>
+        <Grid className="main-grid" fluid={true}>
           <Row>
-            <Col md={2} mdOffset={4}>Top left
-            </Col>
-            <Col md={2} mdOffset={6}>Top right
-            </Col>
+            {columns.slice(0,3)}
           </Row>
           <Row>
-            <Col md={2} mdOffset={2}>Left
+            <Col md={4}><br/>Player {this.state.activeTablePosition}'s turn</Col>
+            <Col  md={4}>
+              <div className="game-board">
+                <BoardImage />
+              </div>
             </Col>
-            <Col md={4} mdOffset={4}>Board
-            </Col>
-            <Col md={2} mdOffset={8}>Right
-            </Col>
+            <Col md={4}><br/>POT: {this.state.pot}}</Col>
           </Row>
           <Row>
-            <Col md={2} mdOffset={4}>Bot left
-            </Col>
-            <Col md={2} mdOffset={6}>Bot right
-            </Col>
+            {columns.slice(3)}
           </Row>
         </Grid>
       )
 
       return (
-        this.state.users.map(user => 
-         {gridInstance}
-          //<div>
-          //  <PlayerGUI key={user} />
-          //</div>
-        )  
+        <Grid className="main-grid" fluid={true}>
+        <Row>
+          {columns.slice(0,3)}
+        </Row>
+        <Row>
+          <Col md={4}><br/>Player {this.state.activeTablePosition}'s turn</Col>
+          <Col  md={4}>
+            <div className="game-board">
+              <BoardImage />
+            </div>
+          </Col>
+          <Col md={4}><br/>POT: {this.state.pot}</Col>
+        </Row>
+        <Row>
+          {columns.slice(3)}
+        </Row>
+      </Grid>
       )
     }
   }
