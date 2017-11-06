@@ -202,6 +202,31 @@ class TestGUI extends React.Component {
           </CardActions>
           </div>
         </Card>
+
+        <Card>
+          <CardHeader
+            title="Challenge"
+            actAsExpander={true}
+            showExpandableButton={true}
+          />
+          <div expandable={true}>
+          <CardText>
+            <TextField 
+              hintText="How much to bet/raise? (Only applies to Bet/Raise button)"
+              /* value={this.state.bidCount} */
+              onChange={e => this.setState({ challengeBet: parseInt(e.target.value) })}
+            />
+          </CardText>
+          <CardActions>
+            <RaisedButton label="Bet"
+              onClick={() => {this.gameActions.onClickChallengeBet(this.state.challengeBet);}}
+              primary={true} 
+              // disable if not current player
+              disabled={!this.state.isCurrentPlayer}
+              style={styles.raisedButton} />
+          </CardActions>
+          </div>
+        </Card>
         <RaisedButton label="Pass"
           onClick={() => {this.gameActions.onClickPass()}}
           primary={true} 
