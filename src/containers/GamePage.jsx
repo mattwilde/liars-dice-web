@@ -5,6 +5,7 @@ import PublicHeader from '../components/PublicHeader';
 import Config from '../modules/Config';
 import socketIOClient from "socket.io-client";
 import PlayerGUI from "../components/PlayerGUI/PlayerGUI";
+import BoardSpaceCarousel from "../components/GameBoard/BoardSpaceCarousel";
 import GameActions from '../modules/GameActions';
 import { Grid, Row, Col  } from 'react-bootstrap';
 import TestGUI from '../components/Debug/TestGUI'; // testing only (maw)
@@ -33,6 +34,8 @@ class GamePage extends React.Component {
 
       activeTablePosition: -1,
       pot: 0,
+      //this is obviously garbage, just here for testing carousel
+      boardTiles: [1,2,3,2,4,5,3,6,7,4,8,9,5,10,11,6,12,13,7,14,15,8,16,17,9,18,19,10,20],
     };
     this.gameActions = new GameActions({
       matchId: props.match.params.matchId,
@@ -192,8 +195,8 @@ class GamePage extends React.Component {
       )
     }
     else {
-      const columns = this.state.users.map(user =>
-          <Col className="player-gui" md={4}>
+      const columns = this.state.users.map((user,i) =>
+          <Col key={i} className="player-gui" md={4}>
             <PlayerGUI key={user._id} user={user} gameActions={this.gameActions}/>
           </Col>
         )
@@ -227,7 +230,7 @@ class GamePage extends React.Component {
           <Col md={4}><br/>Player {this.state.activeTablePosition}'s turn</Col>
           <Col  md={4}>
             <div className="game-board">
-              <BoardImage />
+              <BoardSpaceCarousel boardTiles={this.state.boardTiles.slice(0,5)} />
             </div>
           </Col>
           <Col md={4}><br/>POT: {this.state.pot}</Col>

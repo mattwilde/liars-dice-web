@@ -5,7 +5,7 @@ class BettingButtons extends React.Component {
   render() {
     console.log(this.props.gameActions)
     return (
-      <ButtonToolbar fluid={true}>
+      <ButtonToolbar>
         <Button bsSize="large" onClick={this.props.gameActions.onClickPass}>PASS</Button>
         <Button bsSize="large">CHALLENGE</Button>
       </ButtonToolbar>
