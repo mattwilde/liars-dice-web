@@ -17,33 +17,37 @@ const DIE_POSSIBILITES = [
 class PlayerGUI extends React.Component {
   constructor(props) {
     super(props);
-
+    //Do we need a state here? Everything comes from this.props.user
     this.state = {
+      gameActions: this.props.gameActions,
+      user: this.props.user,
+      userid: this.props.user._id,
       //initiate a random array of dice values,
       //GamePage should do this eventually???
-      playerDice: Array.from({length: 5}, () => DIE_POSSIBILITES[Math.floor(Math.random() * 6)]),
-      playerName: "Johns",//this.props.playerName
+      userDice: this.props.user.dice,//Array.from({length: 5}, () => DIE_POSSIBILITES[Math.floor(Math.random() * 6)]),
+      userName: "Johns",//this.props.userName
       //random amount for now, 
       //will come from match.users.{userid}.chips or something
-      playerChips: Math.floor(Math.random()*1000),
+      userChips: this.props.user.chip_amount,//Math.floor(Math.random()*1000),
     };
   }
 
   render() {
+    console.log(this.props.gameActions)
     return (
       <div>
           <Row>
             <Col md={12}>
-              <Cup diceValues={this.state.playerDice}/>            
+              <Cup dice={this.state.userDice}/>            
             </Col>
           </Row>
           <Row>
             <Col md={6}>
-              <BettingButtons></BettingButtons>            
+              <BettingButtons gameActions={this.props.gameActions}></BettingButtons>            
             </Col>
             <Col md={6}>
-                <p>Total chips: {this.state.playerChips}</p>
-
+                <p>Total chips: {this.state.userChips}</p>
+                <p>Position: {this.state.user.table_position}</p>
             </Col>
           </Row>
       </div>

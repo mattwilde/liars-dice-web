@@ -8,18 +8,27 @@ import FiveImage from "../../images/die/die_face_five.png";
 import SixImage from "../../images/die/die_face_six.png";
 
 const DIE_IMAGES = {
-  'STAR'  : StarImage,
-  'TWO'   : TwoImage,
-  'THREE' : ThreeImage, 
-  'FOUR'  : FourImage,
-  'FIVE'  : FiveImage,
-  'SIX'   : SixImage
+  1 : StarImage,
+  2 : TwoImage,
+  3 : ThreeImage, 
+  4 : FourImage,
+  5 : FiveImage,
+  6 : SixImage
 }
 class Die extends React.Component {
 
   render() {
+    console.log(this.props.die.face)
+    const die = ( () => {
+      if (this.props.die.lost) {
+        //use a faded die image
+        return <Image src={DIE_IMAGES[this.props.die.face]} alt="Die" responsive/>  
+      }
+      return <Image src={DIE_IMAGES[this.props.die.face]} alt="Die" responsive/>     
+    });
     return(
-      <Image src={DIE_IMAGES[this.props.dieValue]} alt="Die" responsive/>      
+      <Image src={DIE_IMAGES[this.props.die.face]} alt="Die" responsive/> 
+      //{die}
     )
   }
 }
