@@ -8,7 +8,7 @@ class Config {
     }
   }
 
-  static isTestDisplay = false;
+  static isTestDisplay = true;
 }
 
 export default Config;

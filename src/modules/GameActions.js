@@ -33,6 +33,14 @@ class GameActions {
     });
   }
 
+  onClickChallengeBet = (bet) => {
+    let data = { matchId: this.matchId, userId: Auth.getUser()._id, bet: bet };
+    console.log('SOCKET EMIT TO SERVER:', 'player-action-challenge-bet', data);
+    this.socket.emit('player-action-challenge-bet', data, (err) => {
+      console.log(err);
+    });
+  }
+
 }
 
 export default GameActions;

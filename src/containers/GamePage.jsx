@@ -25,9 +25,11 @@ class GamePage extends React.Component {
       // from current-matches collection
       matchId: props.match.params.matchId,  // match._id
       mode: null,                           // match.mode
-      minBet: -1,                           // match.minBet
-      maxBet: -1,                           // match.maxBet
-      maxBuyIn: -1,                         // match.maxBuyIn
+      minBet: -1,                           // match.min_bet
+      maxBet: -1,                           // match.max_bet
+      maxBuyIn: -1,                         // match.max_buy_in
+      bettingCap: -1,                       // match.betting_cap
+      bettingCount: 0,                      // match.betting_count
 
       users: [], // users should be in correct table position order
 
@@ -58,7 +60,9 @@ class GamePage extends React.Component {
           minBet: match.min_bet,
           maxBet: match.max_bet,
           maxBuyIn: match.max_buy_in,
-          pot: match.pot
+          pot: match.pot,
+          bettingCap: match.betting_cap,
+          bettingCount: match.betting_count,
         });
         // this.setState({users: match.users.map(x => x._id)}); // set users.
         // this.setState({connectedUsers: match.users.filter(x => x.connection_status === 'connected').map(x => x._id)}); // set users.
@@ -121,7 +125,19 @@ class GamePage extends React.Component {
         this.setState({activeTablePosition: data.active_table_position});
       });
 
-     this.setState({ socket: socket });
+      socket.on('player-action-challenge-bet', data => {
+        console.log('SOCKET RECEIVE:', 'player-action-challenge-bet', data);
+        const users = this.state.users;
+        // update state
+        let userIdx = users.findIndex(x => x._id === data._id);
+        users[userIdx]['previous_action'] = data.previous_action;
+        this.setState({users: users});
+        this.setState({activeTablePosition: data.active_table_position});
+        this.setState({bettingCount: data.betting_count});
+        this.setState({pot: data.pot});        
+      });
+
+      this.setState({ socket: socket });
     }).catch(e => {
       console.log('CATCH', e);
     });  
