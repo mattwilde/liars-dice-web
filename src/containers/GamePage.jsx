@@ -137,6 +137,18 @@ class GamePage extends React.Component {
         this.setState({pot: data.pot});        
       });
 
+      socket.on('player-action-challenge-call', data => {
+        console.log('SOCKET RECEIVE:', 'player-action-challenge-call', data);
+        const users = this.state.users;
+        // update state
+        let userIdx = users.findIndex(x => x._id === data._id);
+        users[userIdx]['previous_action'] = data.previous_action;
+        this.setState({users: users});
+        this.setState({activeTablePosition: data.active_table_position}); // this should get set to -1 since on a call, the round is over
+        this.setState({bettingCount: data.betting_count});
+        this.setState({pot: data.pot}); // this should have all the challenge bets in it now.
+      });
+
       this.setState({ socket: socket });
     }).catch(e => {
       console.log('CATCH', e);

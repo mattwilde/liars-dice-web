@@ -225,6 +225,14 @@ class TestGUI extends React.Component {
               disabled={!this.state.isCurrentPlayer}
               style={styles.raisedButton} />
           </CardActions>
+          <CardActions>
+            <RaisedButton label="Call"
+              onClick={() => {this.gameActions.onClickChallengeCall();}}
+              primary={true} 
+              // disable if not current player
+              disabled={!this.state.isCurrentPlayer}
+              style={styles.raisedButton} />
+          </CardActions>
           </div>
         </Card>
         <RaisedButton label="Pass"

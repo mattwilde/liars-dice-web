@@ -41,6 +41,14 @@ class GameActions {
     });
   }
 
+  onClickChallengeCall = () => {
+    let data = { matchId: this.matchId, userId: Auth.getUser()._id};
+    console.log('SOCKET EMIT TO SERVER:', 'player-action-challenge-call', data);
+    this.socket.emit('player-action-challenge-call', data, (err) => {
+      console.log(err);
+    });
+  }
+
 }
 
 export default GameActions;
