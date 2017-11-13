@@ -43,7 +43,7 @@ class PlayerGUI extends React.Component {
           </Row>
           <Row>
             <Col md={6}>
-              <BettingButtons gameActions={this.props.gameActions}></BettingButtons>            
+              <BettingButtons gameActions={this.props.gameActions} />           
             </Col>
             <Col md={6}>
                 <p>Total chips: {this.state.userChips}</p>

@@ -19,6 +19,11 @@ a:hover {
   color: rgba(0,151,167, 0.8);
 }
 
+button {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
 img {
     margin: auto;
 }

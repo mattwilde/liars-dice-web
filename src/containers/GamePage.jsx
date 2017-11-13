@@ -230,7 +230,7 @@ class GamePage extends React.Component {
           <Col md={4}><br/>Player {this.state.activeTablePosition}'s turn</Col>
           <Col  md={4}>
             <div className="game-board">
-              <BoardSpaceCarousel boardTiles={this.state.boardTiles.slice(0,5)} />
+              GAME BOARD
             </div>
           </Col>
           <Col md={4}><br/>POT: {this.state.pot}</Col>
